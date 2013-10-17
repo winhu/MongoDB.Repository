@@ -114,6 +114,11 @@ namespace MongoDB.Repository
             UnregisterType(typeof(T));
         }
 
+        public static void UnregisterDBContext<TDBContext>() where TDBContext : IMongoDBContext
+        {
+            contexts.RemoveAll(registeration => registeration.Code == typeof(TDBContext).FullName);
+        }
+
     }
 
 }

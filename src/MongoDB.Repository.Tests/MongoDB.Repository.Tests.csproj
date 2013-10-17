@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Entities\Student.cs" />
     <Compile Include="EntityTest.cs" />
+    <Compile Include="RefEntityTest.cs" />
     <Compile Include="TestBase\TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

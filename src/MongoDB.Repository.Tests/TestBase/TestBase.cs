@@ -13,7 +13,8 @@ namespace MongoDB.Repository.Tests
         protected List<Student> students;
         protected List<Teacher> teachers;
         protected List<Grade> grades;
-        [SetUp]
+
+        [TestFixtureSetUp]
         public void Setup()
         {
             MongoDBRepository.RegisterMongoDBContext(new TestDBContext());
@@ -33,20 +34,22 @@ namespace MongoDB.Repository.Tests
                 new Teacher{ Name="Chen", Age=50 }
             };
             grades = new List<Grade>() {
-                new Grade{  Students=students, Teachers=teachers}
+                new Grade()
             };
 
-            Entity.Save(students);
-            Entity.Save(teachers);
-            Entity.Save(grades);
+            //MongoEntity.Save(students);
+            //MongoEntity.Save(teachers);
+            //MongoEntity.Save(grades);
         }
 
-        [TearDown]
+        [TestFixtureTearDown]
         public void Clear()
         {
-            Entity.RemoveAll<Student>();
-            Entity.RemoveAll<Teacher>();
-            Entity.RemoveAll<Grade>();
+            MongoEntity.RemoveAll<Student>();
+            MongoEntity.RemoveAll<Teacher>();
+            MongoEntity.RemoveAll<Grade>();
+
+            MongoDBRepository.UnregisterDBContext<TestDBContext>();
         }
     }
 }

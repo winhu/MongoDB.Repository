@@ -51,8 +51,13 @@
     <Compile Include="ConfigurationRegistration.cs" />
     <Compile Include="DBClient.cs" />
     <Compile Include="DBFactory.cs" />
+    <Compile Include="DBRefContainer.cs" />
+    <Compile Include="MongoEntity.cs" />
+    <Compile Include="RefEntity.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityOperationExtensions.cs" />
+    <Compile Include="IDBRefContainer.cs" />
+    <Compile Include="IRefEntity.cs" />
     <Compile Include="IRegistrationContext.cs" />
     <Compile Include="RegistrationContext.cs" />
     <Compile Include="ITypeRegistration.cs" />

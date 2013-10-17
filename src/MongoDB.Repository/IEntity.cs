@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Driver;
 
 namespace MongoDB.Repository
 {
@@ -20,5 +21,10 @@ namespace MongoDB.Repository
         /// remove document
         /// </summary>
         void Remove();
+        /// <summary>
+        /// convert to mongodbref
+        /// </summary>
+        /// <returns></returns>
+        MongoDBRef ToDBRef();
     }
 }
