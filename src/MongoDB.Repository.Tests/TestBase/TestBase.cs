@@ -18,6 +18,7 @@ namespace MongoDB.Repository.Tests
         public void Setup()
         {
             MongoDBRepository.RegisterMongoDBContext(new TestDBContext());
+            MongoDBRepository.RegisterMongoIndex();
 
             students = new List<Student>() {
                 new Student{ Name="hyf", Age=33 },
