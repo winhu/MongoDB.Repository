@@ -69,7 +69,20 @@ namespace MongoDB.Repository
                 return queryable.OrderByDescending(orderby).Skip(pageIndex * pageSize).Take(pageSize);
             }
         }
-
+        internal static long DBCount<T>() where T : IEntity
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(T)))
+            {
+                return client.Collection.Count();
+            }
+        }
+        internal static long DBCount<T>(Expression<Func<T, bool>> where) where T : IEntity
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(T)))
+            {
+                return client.Collection.Count(Query<T>.Where(where));
+            }
+        }
         internal static void DBSave<T>(this T entity) where T : IEntity
         {
             using (IDBClient client = DBFactory.GetClient(entity.GetType()))

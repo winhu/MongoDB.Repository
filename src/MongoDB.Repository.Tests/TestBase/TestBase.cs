@@ -21,13 +21,7 @@ namespace MongoDB.Repository.Tests
 
             students = new List<Student>() {
                 new Student{ Name="hyf", Age=33 },
-                new Student{ Name="zhc", Age=30 },
-                new Student{ Name="a", Age=18 },
-                new Student{ Name="b", Age=19 },
-                new Student{ Name="c", Age=20 },
-                new Student{ Name="d", Age=21 },
-                new Student{ Name="e", Age=22 },
-                new Student{ Name="f", Age=23 }
+                new Student{ Name="zhc", Age=30 }
             };
             teachers = new List<Teacher>() {
                 new Teacher{ Name="Lee", Age=53 },
