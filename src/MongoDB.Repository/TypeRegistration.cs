@@ -9,7 +9,7 @@ namespace MongoDB.Repository
     public sealed class TypeRegistration : ITypeRegistration
     {
         private string dbName;
-        private List<Type> types = new List<Type>();
+        private IDictionary<Type, string[]> registrationTypeAndIndex = new Dictionary<Type, string[]>();
         public ITypeRegistration RegisterDatabase(string dbName)
         {
             this.dbName = dbName;
@@ -22,8 +22,10 @@ namespace MongoDB.Repository
 
         public ITypeRegistration RegisterType(Type entityType)
         {
-            if (!types.Contains(entityType))
-                types.Add(entityType);
+            var indexs = entityType.GetProperties().Where(p => p.CanRead && p.CanWrite && p.CustomAttributes.Any(a => a.AttributeType == typeof(BsonIndexAttribute))).Select(p => p.Name).ToArray<string>();
+            registrationTypeAndIndex.Remove(entityType);
+            registrationTypeAndIndex.Add(entityType, indexs);
+
             return this;
         }
 
@@ -34,7 +36,7 @@ namespace MongoDB.Repository
 
         public ITypeRegistration UnRegisterType(Type entityType)
         {
-            types.Remove(entityType);
+            registrationTypeAndIndex.Remove(entityType);
             return this;
         }
 
@@ -46,13 +48,26 @@ namespace MongoDB.Repository
 
         public bool IsRegisterType(Type entityType)
         {
-            return types.Contains(entityType);
+            return registrationTypeAndIndex.ContainsKey(entityType);
         }
-
-
-        public List<Type> GetRegisterTypes()
+        
+        public void EnsureDBIndex()
         {
-            return types;
+            foreach (var key in registrationTypeAndIndex.Keys)
+            {
+                using (IDBClient client = DBFactory.GetClient(key))
+                {
+                    client.Collection.EnsureIndex(registrationTypeAndIndex[key]);
+                }
+            }
+        }
+        public void EnsureDBIndex(Type type)
+        {
+            if (!registrationTypeAndIndex.ContainsKey(type)) return;
+            using (IDBClient client = DBFactory.GetClient(type))
+            {
+                client.Collection.EnsureIndex(registrationTypeAndIndex[type]);
+            }
         }
     }
 }

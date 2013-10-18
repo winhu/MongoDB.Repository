@@ -53,5 +53,16 @@ namespace MongoDB.Repository
         /// </summary>
         /// <returns></returns>
         MongoUrl GetMongoUrl();
+
+        /// <summary>
+        /// ensure index to mongodb
+        /// </summary>
+        void EnsureDBIndex();
+
+        /// <summary>
+        /// ensure index of type to mongodb
+        /// </summary>
+        /// <param name="type"></param>
+        void EnsureDBIndex(Type type);
     }
 }

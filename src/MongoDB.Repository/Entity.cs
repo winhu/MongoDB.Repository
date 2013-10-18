@@ -13,6 +13,7 @@ namespace MongoDB.Repository
     public abstract class Entity : IEntity
     {
         [BsonId]
+        [BsonIndex]
         public string Id
         {
             get

@@ -10,7 +10,8 @@ namespace MongoDB.Repository
     public class RegistrationContext : IRegistrationContext
     {
         IConfigurationRegistration configuration;
-        List<Type> types = new List<Type>();
+        ITypeRegistration typeResolver = new TypeRegistration();
+        Type dbContextType;
 
         public string Code
         {
@@ -32,23 +33,22 @@ namespace MongoDB.Repository
 
         public bool IsRegisterType<T>()
         {
-            return IsRegisterType(typeof(T));
+            return typeResolver.IsRegisterType<T>();
         }
 
         public bool IsRegisterType(Type type)
         {
-            return types.Exists(t => t == type);
+            return typeResolver.IsRegisterType(type);
         }
 
         public void RegisterType(Type type)
         {
-            if (IsRegisterType(type)) return;
-            types.Add(type);
+            typeResolver.RegisterType(type);
         }
 
         public void UnregisterType(Type type)
         {
-            types.RemoveAll(t => t == type);
+            typeResolver.UnRegisterType(type);
         }
 
         public MongoUrl GetMongoUrl()
@@ -57,14 +57,22 @@ namespace MongoDB.Repository
             return configuration.Get(dbContextType);
         }
 
-        private Type dbContextType;
         public void RegisterDBContext(IMongoDBContext context)
         {
             dbContextType = context.GetType();
             this.configuration = context.BuildConfiguration();
-            ITypeRegistration typeSolver = new TypeRegistration();
-            context.OnRegisterModel(typeSolver);
-            types.AddRange(typeSolver.GetRegisterTypes());
+            context.OnRegisterModel(typeResolver);
+        }
+
+        public void EnsureDBIndex()
+        {
+            typeResolver.EnsureDBIndex();
+        }
+        
+        public void EnsureDBIndex(Type type)
+        {
+            if (!typeResolver.IsRegisterType(type)) return;
+            typeResolver.EnsureDBIndex(type);
         }
     }
 }

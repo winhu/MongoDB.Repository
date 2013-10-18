@@ -8,6 +8,7 @@ namespace MongoDB.Repository.Tests.Entities
 {
     public class Student : Entity
     {
+        [BsonIndex]
         public string Name { get; set; }
         public int Age { get; set; }
     }

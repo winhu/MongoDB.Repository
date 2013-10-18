@@ -17,8 +17,17 @@ namespace MongoDB.Repository
         {
             dbName = url.DatabaseName;
             this.type = type;
+            MongoClientSettings setting = MongoClientSettings.FromUrl(url);
             client = new MongoClient(url);
         }
+        //public DBClient(MongoClientSettings setting, Type type)
+        //{
+        //    var credentials = setting.Credentials.ToArray();
+        //    if (credentials.Length == 0) throw new MongoAuthenticationException("UnAuthentication MongoClient");
+        //    dbName = credentials[0].Source;
+        //    this.type = type;
+        //    client = new MongoClient(setting);
+        //}
         /// <summary>
         /// database name
         /// </summary>

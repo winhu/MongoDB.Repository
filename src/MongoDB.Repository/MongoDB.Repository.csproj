@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BsonIndexAttribute.cs" />
     <Compile Include="ConfigurationRegistration.cs" />
     <Compile Include="DBClient.cs" />
     <Compile Include="DBFactory.cs" />

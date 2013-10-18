@@ -34,6 +34,29 @@ namespace MongoDB.Repository
         }
 
         /// <summary>
+        /// ensure mongo index by BsonIndexAttribute
+        /// </summary>
+        public static void RegisterMongoIndex()
+        {
+            foreach (var context in contexts)
+            {
+                context.EnsureDBIndex();
+            }
+        }
+        /// <summary>
+        /// ensure mongo index by BsonIndexAttribute
+        /// </summary>
+        /// <param name="DBContextType">IMongoDBContext</param>
+        /// <param name="entityType">collection type</param>
+        public static void RegisterMongoIndex(Type DBContextType, Type entityType)
+        {
+            var context = contexts.SingleOrDefault(c => c.Code == DBContextType.FullName);
+            if (context == null) return;
+            if (!context.IsRegisterType(entityType)) return;
+            context.EnsureDBIndex(entityType);
+        }
+
+        /// <summary>
         /// get MongoUrl of type which first found
         /// </summary>
         /// <param name="type">collection type</param>
@@ -57,15 +80,16 @@ namespace MongoDB.Repository
         /// <summary>
         /// register collection type for IMongoDBContext
         /// </summary>
-        /// <param name="DBContextType">IMongoDBContext</param>
-        /// <param name="EntityType">collection type</param>
-        public static void RegisterType(Type DBContextType, Type EntityType)
+        /// <param name="dbContextType">IMongoDBContext</param>
+        /// <param name="entityType">collection type</param>
+        public static void RegisterType(Type dbContextType, Type entityType)
         {
-            if (!contexts.Exists(c => c.Code == DBContextType.FullName)) throw new MongoException("Unregisterd MongoDBContext");
+            if (!contexts.Exists(c => c.Code == dbContextType.FullName)) throw new MongoException("Unregisterd MongoDBContext");
 
-            var context = contexts.SingleOrDefault(c => c.Code == DBContextType.FullName);
+            var context = contexts.SingleOrDefault(c => c.Code == dbContextType.FullName);
             if (context == null) throw new MongoException("Unregisterd MongoDBContext");
-            context.RegisterType(EntityType);
+            context.RegisterType(entityType);
+            RegisterMongoIndex(dbContextType, entityType);
         }
         /// <summary>
         /// register collection type for IMongoDBContext
