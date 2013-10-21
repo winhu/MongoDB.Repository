@@ -9,16 +9,16 @@ namespace MongoDB.Repository
 {
     public class RegistrationContext : IRegistrationContext
     {
-        IConfigurationRegistration configuration;
-        ITypeRegistration typeResolver = new TypeRegistration();
-        Type dbContextType;
+        IConfigurationRegistration _configuration;
+        ITypeRegistration _typeResolver = new TypeRegistration();
+        Type _dbContextType;
 
         public string Code
         {
             get
             {
-                if (dbContextType == null) return null;
-                return dbContextType.FullName;
+                if (_dbContextType == null) return null;
+                return _dbContextType.FullName;
             }
         }
 
@@ -26,53 +26,53 @@ namespace MongoDB.Repository
         {
             get
             {
-                if (dbContextType == null) return null;
-                return configuration.GetDataBaseName(dbContextType);
+                if (_dbContextType == null) return null;
+                return _configuration.GetDataBaseName(_dbContextType);
             }
         }
 
         public bool IsRegisterType<T>()
         {
-            return typeResolver.IsRegisterType<T>();
+            return _typeResolver.IsRegisterType<T>();
         }
 
         public bool IsRegisterType(Type type)
         {
-            return typeResolver.IsRegisterType(type);
+            return _typeResolver.IsRegisterType(type);
         }
 
         public void RegisterType(Type type)
         {
-            typeResolver.RegisterType(type);
+            _typeResolver.RegisterType(type);
         }
 
         public void UnregisterType(Type type)
         {
-            typeResolver.UnRegisterType(type);
+            _typeResolver.UnRegisterType(type);
         }
 
         public MongoUrl GetMongoUrl()
         {
-            if (dbContextType == null) return null;
-            return configuration.Get(dbContextType);
+            if (_dbContextType == null) return null;
+            return _configuration.Get(_dbContextType);
         }
 
         public void RegisterDBContext(IMongoDBContext context)
         {
-            dbContextType = context.GetType();
-            this.configuration = context.BuildConfiguration();
-            context.OnRegisterModel(typeResolver);
+            _dbContextType = context.GetType();
+            this._configuration = context.BuildConfiguration();
+            context.OnRegisterModel(_typeResolver);
         }
 
         public void EnsureDBIndex()
         {
-            typeResolver.EnsureDBIndex();
+            _typeResolver.EnsureDBIndex();
         }
         
         public void EnsureDBIndex(Type type)
         {
-            if (!typeResolver.IsRegisterType(type)) return;
-            typeResolver.EnsureDBIndex(type);
+            if (!_typeResolver.IsRegisterType(type)) return;
+            _typeResolver.EnsureDBIndex(type);
         }
     }
 }

@@ -13,9 +13,9 @@ namespace MongoDB.Repository
     {
         public RefEntity()
         {
-            container = new DBRefContainer(this.DBRefs);
+            _container = new DBRefContainer(this.DBRefs);
         }
-        private IDBRefContainer container;
+        private IDBRefContainer _container;
 
         [BsonIgnoreIfNull]
         public List<MongoDBRef> DBRefs
@@ -31,87 +31,93 @@ namespace MongoDB.Repository
                 if (value != null)
                 {
                     _dbrefs = value;
-                    container = new DBRefContainer(_dbrefs);
+                    _container = new DBRefContainer(_dbrefs);
                 }
-                container = new DBRefContainer(_dbrefs);
+                _container = new DBRefContainer(_dbrefs);
             }
         }
         private List<MongoDBRef> _dbrefs;
 
         public bool Exists(string id)
         {
-            return container.Exists(id);
+            return _container.Exists(id);
         }
 
         public bool Exists<T>() where T : IEntity
         {
-            return container.Exists<T>();
+            return _container.Exists<T>();
         }
 
         public bool Exists<T>(Predicate<T> match) where T : IEntity
         {
-            return container.Exists<T>(match);
+            return _container.Exists<T>(match);
         }
 
         public T Pick<T>(string id) where T : IEntity
         {
-            return container.Pick<T>(id);
+            return _container.Pick<T>(id);
         }
 
         public T Pick<T>(Expression<Func<T, bool>> where) where T : IEntity
         {
-            return container.Pick<T>(where);
+            return _container.Pick<T>(where);
         }
 
         public List<T> GetAll<T>() where T : IEntity
         {
-            return container.GetAll<T>();
+            return _container.GetAll<T>();
         }
 
         public List<T> GetMany<T>(Expression<Func<T, bool>> where) where T : IEntity
         {
-            return container.GetMany<T>(where);
+            return _container.GetMany<T>(where);
         }
 
         public void Add<T>(T entity) where T : IEntity
         {
-            container.Add<T>(entity);
+            _container.Add<T>(entity);
         }
 
         public void Add<T>(List<T> entities) where T : IEntity
         {
-            container.Add<T>(entities);
+            _container.Add<T>(entities);
         }
 
         public int Remove<T>(Expression<Func<T, bool>> where) where T : IEntity
         {
-            return container.Remove<T>(where);
+            return _container.Remove<T>(where);
         }
 
         public void Remove<T>(T entity) where T : IEntity
         {
-            container.Remove<T>(entity);
+            _container.Remove<T>(entity);
         }
 
         public void Remove<T>() where T : IEntity
         {
-            container.Remove<T>();
+            _container.Remove<T>();
         }
 
         public int Count<T>() where T : IEntity
         {
-            return container.Count<T>();
+            return _container.Count<T>();
         }
 
         public int Count<T>(Expression<Func<T, bool>> where) where T : IEntity
         {
-            return container.Count<T>(where);
+            return _container.Count<T>(where);
         }
 
         public void Update()
         {
             Save();
-            container.GetAll().ForEach(e => e.Save());
+            _container.GetAll().ForEach(e => e.Save());
+        }
+
+
+        public List<IEntity> GetAll()
+        {
+            return _container.GetAll();
         }
     }
 }

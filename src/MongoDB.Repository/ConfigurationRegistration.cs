@@ -9,7 +9,7 @@ namespace MongoDB.Repository
 {
     public sealed class ConfigurationRegistration : IConfigurationRegistration
     {
-        private IDictionary<Type, MongoUrl> configContainer = new Dictionary<Type, MongoUrl>();
+        private IDictionary<Type, MongoUrl> _configContainer = new Dictionary<Type, MongoUrl>();
 
         private static object locker = new object();
         /// <summary>
@@ -19,7 +19,7 @@ namespace MongoDB.Repository
         /// <returns></returns>
         public bool Exist(Type type)
         {
-            return configContainer.ContainsKey(type);
+            return _configContainer.ContainsKey(type);
         }
         /// <summary>
         /// add one MongoUrl
@@ -31,7 +31,7 @@ namespace MongoDB.Repository
             lock (locker)
             {
                 if (!Exist(type))
-                    configContainer.Add(type, url);
+                    _configContainer.Add(type, url);
             }
         }
         /// <summary>
@@ -43,7 +43,7 @@ namespace MongoDB.Repository
             lock (locker)
             {
                 if (Exist(type))
-                    configContainer.Remove(type);
+                    _configContainer.Remove(type);
             }
         }
         /// <summary>
@@ -53,7 +53,7 @@ namespace MongoDB.Repository
         /// <returns></returns>
         public MongoUrl Get(Type type)
         {
-            return configContainer[type];
+            return _configContainer[type];
         }
         /// <summary>
         /// get MongoDB database name of configuration of MongoDBContext type
@@ -63,7 +63,7 @@ namespace MongoDB.Repository
         public string GetDataBaseName(Type type)
         {
             if (Exist(type))
-                return configContainer[type].DatabaseName;
+                return _configContainer[type].DatabaseName;
             return null;
         }
     }

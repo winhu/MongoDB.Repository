@@ -15,9 +15,9 @@ namespace MongoDB.Repository
     {
         static MongoDBRepository()
         {
-            contexts = new List<IRegistrationContext>();
+            Contexts = new List<IRegistrationContext>();
         }
-        static List<IRegistrationContext> contexts;
+        static readonly List<IRegistrationContext> Contexts;
 
         /// <summary>
         /// register IMongoDBContext if not exists
@@ -25,12 +25,12 @@ namespace MongoDB.Repository
         /// <param name="dbContext"></param>
         public static void RegisterMongoDBContext(IMongoDBContext dbContext)
         {
-            if (contexts.Exists(c => c.Code == dbContext.GetType().FullName))
+            if (Contexts.Exists(c => c.Code == dbContext.GetType().FullName))
                 return;
 
             IRegistrationContext context = new RegistrationContext();
             context.RegisterDBContext(dbContext);
-            contexts.Add(context);
+            Contexts.Add(context);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace MongoDB.Repository
         /// </summary>
         public static void RegisterMongoIndex()
         {
-            foreach (var context in contexts)
+            foreach (var context in Contexts)
             {
                 context.EnsureDBIndex();
             }
@@ -50,7 +50,7 @@ namespace MongoDB.Repository
         /// <param name="entityType">collection type</param>
         public static void RegisterMongoIndex(Type DBContextType, Type entityType)
         {
-            var context = contexts.SingleOrDefault(c => c.Code == DBContextType.FullName);
+            var context = Contexts.SingleOrDefault(c => c.Code == DBContextType.FullName);
             if (context == null) return;
             if (!context.IsRegisterType(entityType)) return;
             context.EnsureDBIndex(entityType);
@@ -63,7 +63,7 @@ namespace MongoDB.Repository
         /// <returns></returns>
         internal static MongoUrl GetConfig(Type type)
         {
-            var context = contexts.SingleOrDefault(c => c.IsRegisterType(type));
+            var context = Contexts.SingleOrDefault(c => c.IsRegisterType(type));
             if (context == null) return null;
             return context.GetMongoUrl();
         }
@@ -84,9 +84,9 @@ namespace MongoDB.Repository
         /// <param name="entityType">collection type</param>
         public static void RegisterType(Type dbContextType, Type entityType)
         {
-            if (!contexts.Exists(c => c.Code == dbContextType.FullName)) throw new MongoException("Unregisterd MongoDBContext");
+            if (!Contexts.Exists(c => c.Code == dbContextType.FullName)) throw new MongoException("Unregisterd MongoDBContext");
 
-            var context = contexts.SingleOrDefault(c => c.Code == dbContextType.FullName);
+            var context = Contexts.SingleOrDefault(c => c.Code == dbContextType.FullName);
             if (context == null) throw new MongoException("Unregisterd MongoDBContext");
             context.RegisterType(entityType);
             RegisterMongoIndex(dbContextType, entityType);
@@ -107,7 +107,7 @@ namespace MongoDB.Repository
         /// <returns></returns>
         public static bool IsRegisterType(Type type)
         {
-            return contexts.Exists(c => c.IsRegisterType(type));
+            return Contexts.Exists(c => c.IsRegisterType(type));
         }
         /// <summary>
         /// is register collection type
@@ -124,7 +124,7 @@ namespace MongoDB.Repository
         /// <param name="type">collection type</param>
         public static void UnregisterType(Type type)
         {
-            contexts.ForEach(delegate(IRegistrationContext context)
+            Contexts.ForEach(delegate(IRegistrationContext context)
             {
                 context.UnregisterType(type);
             });
@@ -140,7 +140,7 @@ namespace MongoDB.Repository
 
         public static void UnregisterDBContext<TDBContext>() where TDBContext : IMongoDBContext
         {
-            contexts.RemoveAll(registeration => registeration.Code == typeof(TDBContext).FullName);
+            Contexts.RemoveAll(registeration => registeration.Code == typeof(TDBContext).FullName);
         }
 
     }

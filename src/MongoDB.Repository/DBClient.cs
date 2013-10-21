@@ -10,15 +10,15 @@ namespace MongoDB.Repository
 {
     public class DBClient : IDBClient
     {
-        private MongoClient client;
-        private string dbName;
-        Type type;
+        private MongoClient _client;
+        private string _dbName;
+        Type _type;
         public DBClient(MongoUrl url, Type type)
         {
-            dbName = url.DatabaseName;
-            this.type = type;
+            _dbName = url.DatabaseName;
+            this._type = type;
             MongoClientSettings setting = MongoClientSettings.FromUrl(url);
-            client = new MongoClient(url);
+            _client = new MongoClient(url);
         }
         //public DBClient(MongoClientSettings setting, Type type)
         //{
@@ -35,7 +35,7 @@ namespace MongoDB.Repository
         {
             get
             {
-                return dbName;
+                return _dbName;
             }
         }
         /// <summary>
@@ -45,7 +45,7 @@ namespace MongoDB.Repository
         {
             get
             {
-                return client.GetServer().GetDatabase(DBName).GetCollection(type.Name);
+                return _client.GetServer().GetDatabase(DBName).GetCollection(_type.Name);
             }
         }
 
@@ -66,9 +66,9 @@ namespace MongoDB.Repository
             {
                 if (disposing)
                 {
-                    client = null;
-                    type = null;
-                    dbName = null;
+                    _client = null;
+                    _type = null;
+                    _dbName = null;
                 }
                 // Release unmanaged resources
                 m_disposed = true;

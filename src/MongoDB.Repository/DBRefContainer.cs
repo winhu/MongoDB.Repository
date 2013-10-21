@@ -11,7 +11,7 @@ namespace MongoDB.Repository
 {
     internal sealed class DBRefContainer : IDBRefContainer
     {
-        IDictionary<Type, IList> container = new Dictionary<Type, IList>();
+        IDictionary<Type, IList> _container = new Dictionary<Type, IList>();
         List<MongoDBRef> _dbRef;
         public DBRefContainer(List<MongoDBRef> dbRef)
         {
@@ -20,21 +20,21 @@ namespace MongoDB.Repository
 
         private void checkContainer<T>()
         {
-            if (!container.ContainsKey(typeof(T)))
+            if (!_container.ContainsKey(typeof(T)))
             {
-                container.Add(typeof(T), new List<T>());
+                _container.Add(typeof(T), new List<T>());
             }
         }
 
         private List<T> getContainer<T>()
         {
-            if (!container.ContainsKey(typeof(T)))
+            if (!_container.ContainsKey(typeof(T)))
             {
                 List<T> lst = new List<T>();
-                container.Add(typeof(T), lst);
+                _container.Add(typeof(T), lst);
                 return lst;
             }
-            return container[typeof(T)] as List<T>;
+            return _container[typeof(T)] as List<T>;
         }
         public bool Exists(string id)
         {
@@ -145,9 +145,9 @@ namespace MongoDB.Repository
         public List<IEntity> GetAll()
         {
             List<IEntity> entities = new List<IEntity>();
-            foreach (Type type in container.Keys)
+            foreach (Type type in _container.Keys)
             {
-                entities.AddRange(container[type].Cast<IEntity>());
+                entities.AddRange(_container[type].Cast<IEntity>());
             }
             return entities;
         }

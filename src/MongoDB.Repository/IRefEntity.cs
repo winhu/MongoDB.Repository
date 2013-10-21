@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace MongoDB.Repository
 {
-    public interface IRefEntity : IEntity
+    public interface IRefEntity : IEntity, IDBRefContainer
     {
         /// <summary>
         /// list of MongoDBRef
