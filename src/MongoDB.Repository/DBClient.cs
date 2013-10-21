@@ -62,7 +62,7 @@ namespace MongoDB.Repository
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!m_disposed)
+            if (!_mDisposed)
             {
                 if (disposing)
                 {
@@ -71,7 +71,7 @@ namespace MongoDB.Repository
                     _dbName = null;
                 }
                 // Release unmanaged resources
-                m_disposed = true;
+                _mDisposed = true;
             }
         }
         ~DBClient()
@@ -79,7 +79,7 @@ namespace MongoDB.Repository
             Dispose(false);
         }
 
-        private bool m_disposed;
+        private bool _mDisposed;
         #endregion
     }
 }
