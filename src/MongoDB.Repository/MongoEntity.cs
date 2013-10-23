@@ -68,5 +68,9 @@ namespace MongoDB.Repository
         {
             entities.DBSave<T>();
         }
+        public static void InsertBatch<T>(List<T> entities) where T : IEntity
+        {
+            EntityOperationExtensions.DBInsertBatch<T>(entities);
+        }
     }
 }

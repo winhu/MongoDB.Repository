@@ -22,7 +22,10 @@ namespace MongoDB.Repository.Tests
             Student student = new Student();
             student.Name = "hyf";
             student.Age = 30;
-            student.Save();
+            //student.Save();
+
+            MongoEntity.Save<Student>(students);
+
             var stud = MongoEntity.Get<Student>(student.Id);
             MongoEntity.Get<Student>(s => s.Name == "hyf");
             Assert.AreEqual(student.Name, stud.Name);

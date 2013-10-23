@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
 namespace MongoDB.Repository
@@ -97,11 +99,26 @@ namespace MongoDB.Repository
                 client.Collection.Save(type, entity);
             }
         }
-        internal static void DBSave<T>(this List<T> entitys) where T : IEntity
+        internal static void DBSave<T>(this List<T> entities) where T : IEntity
         {
             using (IDBClient client = DBFactory.GetClient(typeof(T)))
             {
-                entitys.ForEach(e => client.Collection.Save<T>(e));
+                entities.ForEach(e => client.Collection.Save<T>(e));
+            }
+        }
+        internal static void DBInsertBatch<T>(this List<T> entities) where T : IEntity
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(T)))
+            {
+                try
+                {
+                    var ret = client.Collection.InsertBatch<T>(entities, new Driver.MongoInsertOptions() { Flags = Driver.InsertFlags.ContinueOnError });
+                }
+                catch (WriteConcernException e)
+                {
+                    if (!e.CommandResult.Ok)
+                        throw e;
+                }
             }
         }
         internal static bool DBRemove<T>(this T entity) where T : IEntity
