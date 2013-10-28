@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 
 namespace MongoDB.Repository
 {
@@ -18,6 +19,11 @@ namespace MongoDB.Repository
         /// return MongoCollection
         /// </summary>
         MongoCollection Collection { get; }
+
+        /// <summary>
+        /// return MongoGridFS
+        /// </summary>
+        MongoGridFS GridFS { get; }
 
         /// <summary>
         /// dispose resources

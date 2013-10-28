@@ -15,6 +15,10 @@ namespace MongoDB.Repository
         Type _type;
         public DBClient(MongoUrl url, Type type)
         {
+            if (url == null)
+                throw new MongoAuthenticationException("Wrong MongoUrl");
+            if (type == null)
+                throw new MongoAuthenticationException("Wrong Type");
             _dbName = url.DatabaseName;
             this._type = type;
             MongoClientSettings setting = MongoClientSettings.FromUrl(url);
@@ -49,6 +53,11 @@ namespace MongoDB.Repository
             }
         }
 
+        public Driver.GridFS.MongoGridFS GridFS
+        {
+            get { return _client.GetServer().GetDatabase(DBName).GridFS; }
+        }
+
         #region 资源回收
         public void Dispose()
         {
@@ -81,5 +90,7 @@ namespace MongoDB.Repository
 
         private bool _mDisposed;
         #endregion
+
+
     }
 }

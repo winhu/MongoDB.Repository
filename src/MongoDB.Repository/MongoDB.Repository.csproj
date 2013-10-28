@@ -53,7 +53,9 @@
     <Compile Include="DBClient.cs" />
     <Compile Include="DBFactory.cs" />
     <Compile Include="DBRefContainer.cs" />
+    <Compile Include="IMongoFile.cs" />
     <Compile Include="MongoEntity.cs" />
+    <Compile Include="MongoFile.cs" />
     <Compile Include="RefEntity.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityOperationExtensions.cs" />

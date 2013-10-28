@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
+using MongoDB.Driver.GridFS;
 
 namespace MongoDB.Repository
 {
@@ -126,6 +127,42 @@ namespace MongoDB.Repository
             using (IDBClient client = DBFactory.GetClient(entity.GetType()))
             {
                 return client.Collection.Remove(Query<T>.EQ(e => e.Id, entity.Id)).Ok;
+            }
+        }
+
+        internal static MongoGridFSFileInfo DBSaveGridFS(IMongoFile file)
+        {
+            using (IDBClient client = DBFactory.GetClient(file.GetType()))
+            {
+                //if (file.NeedChunk)
+                return client.GridFS.Upload(file.FileName);
+                //else
+                //{
+                //MongoGridFSFileInfo fi=new MongoGridFSFileInfo(
+                //    return client.GridFS.Create(file.FileName);
+                //}
+            }
+        }
+        internal static IMongoFile DBLoadGridFS(Type type, IMongoFile file)
+        {
+            using (IDBClient client = DBFactory.GetClient(type))
+            {
+                file.Attach(client.GridFS.FindOneById(file.Id));
+                return file;
+            }
+        }
+        internal static MongoGridFSFileInfo DBLoadGridFS(Type type, string id)
+        {
+            using (IDBClient client = DBFactory.GetClient(type))
+            {
+                return client.GridFS.FindOneById(id);
+            }
+        }
+        internal static void DBRemoveGridFS(Type type, string id)
+        {
+            using (IDBClient client = DBFactory.GetClient(type))
+            {
+                client.GridFS.DeleteById(id);
             }
         }
 

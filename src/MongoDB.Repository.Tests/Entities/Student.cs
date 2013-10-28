@@ -11,6 +11,8 @@ namespace MongoDB.Repository.Tests.Entities
         [BsonIndex]
         public string Name { get; set; }
         public int Age { get; set; }
+
+        MongoDB.Driver.GridFS.MongoGridFSFileInfo file { get; set; }
     }
 
     public class Teacher : Entity

@@ -33,13 +33,13 @@ namespace MongoDB.Repository
         private ObjectId __id;
 
 
-        public void Save()
+        public virtual void Save()
         {
             //this.DBSave();
             EntityOperationExtensions.DBSave(this.GetType(), this);
         }
 
-        public void Remove()
+        public virtual void Remove()
         {
             this.DBRemove();
         }
