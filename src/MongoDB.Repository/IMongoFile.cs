@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver.GridFS;
 
 namespace MongoDB.Repository
@@ -10,32 +12,69 @@ namespace MongoDB.Repository
     public interface IMongoFile : IEntity
     {
         /// <summary>
-        /// 文件名
+        /// remote file name
         /// </summary>
-        string FileName { get; set; }
-
-        bool NeedChunk { get; }
+        string RemoteFileName { get; set; }
 
         /// <summary>
-        /// 文件所在GridFs的Id
+        /// local file name
         /// </summary>
-        string FsId { get; set; }
+        string LocalFileName { get; set; }
 
         /// <summary>
-        /// 文件数据
+        /// data
         /// </summary>
-        byte[] Data { get; set; }
+        byte[] Data { get; }
 
         /// <summary>
-        /// 文件MD5码
+        /// MD5
         /// </summary>
-        string MD5 { get; set; }
+        string MD5 { get; }
 
+        /// <summary>
+        /// content type
+        /// </summary>
+        string ContentType { get; }
 
-        void Load();
+        /// <summary>
+        /// size
+        /// </summary>
+        int Size { get; }
 
-        void Load(string id);
+        /// <summary>
+        /// alias
+        /// </summary>
+        string[] Aliases { get; }
+        /// <summary>
+        /// metadata
+        /// </summary>
+        BsonDocument Metadata { get; set; }
 
-        void Attach(MongoGridFSFileInfo gridFSFileInfo);
+        /// <summary>
+        /// upload date
+        /// </summary>
+        DateTime UploadDate { get; set; }
+
+        /// <summary>
+        /// add alias
+        /// </summary>
+        /// <param name="alias">alias</param>
+        void AddAlias(string alias);
+        /// <summary>
+        /// add aliases
+        /// </summary>
+        /// <param name="aliases">aliases</param>
+        void AddAliases(string[] aliases);
+
+        /// <summary>
+        /// download file
+        /// </summary>
+        /// <param name="localFileName">abs file full path</param>
+        void Download(string localFileName);
+        /// <summary>
+        /// download file
+        /// </summary>
+        /// <param name="stream">file stream</param>
+        void Download(Stream stream);
     }
 }

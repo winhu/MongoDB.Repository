@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -130,41 +131,103 @@ namespace MongoDB.Repository
             }
         }
 
+
         internal static MongoGridFSFileInfo DBSaveGridFS(IMongoFile file)
         {
-            using (IDBClient client = DBFactory.GetClient(file.GetType()))
+            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
             {
-                //if (file.NeedChunk)
-                return client.GridFS.Upload(file.FileName);
-                //else
-                //{
-                //MongoGridFSFileInfo fi=new MongoGridFSFileInfo(
-                //    return client.GridFS.Create(file.FileName);
-                //}
+                using (Stream stream = File.OpenRead(file.LocalFileName))
+                {
+                    return client.GridFS.Upload(stream, file.RemoteFileName, BuildMongoGridFSCreateOptions(file));//.Upload(file.FileName);
+                }
             }
         }
-        internal static IMongoFile DBLoadGridFS(Type type, IMongoFile file)
+        //internal static IMongoFile DBLoadGridFS(IMongoFile file)
+        //{
+        //    using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+        //    {
+        //        file.Attach(client.GridFS.FindOneById(file.Id));
+        //        return file;
+        //    }
+        //}
+        internal static MongoGridFSCreateOptions BuildMongoGridFSCreateOptions(IMongoFile file)
         {
-            using (IDBClient client = DBFactory.GetClient(type))
-            {
-                file.Attach(client.GridFS.FindOneById(file.Id));
-                return file;
-            }
+            MongoGridFSCreateOptions options = new MongoGridFSCreateOptions();
+            options.Id = file.Id;
+            options.ChunkSize = file.Size;
+            options.ContentType = file.ContentType;
+            options.Aliases = file.Aliases;
+            options.Metadata = file.Metadata;
+            options.UploadDate = file.UploadDate;
+            return options;
         }
-        internal static MongoGridFSFileInfo DBLoadGridFS(Type type, string id)
+        internal static MongoGridFSFileInfo DBLoadGridFS(BsonValue id)
         {
-            using (IDBClient client = DBFactory.GetClient(type))
+            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
             {
                 return client.GridFS.FindOneById(id);
             }
         }
-        internal static void DBRemoveGridFS(Type type, string id)
+        internal static List<MongoGridFSFileInfo> DBLoadGridFS(string remoteFileName)
         {
-            using (IDBClient client = DBFactory.GetClient(type))
+            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            {
+                return client.GridFS.Find(remoteFileName).ToList<MongoGridFSFileInfo>();
+            }
+        }
+        internal static void DBRemoveGridFS(BsonValue id)
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
             {
                 client.GridFS.DeleteById(id);
             }
         }
+        internal static void DBRemoveGridFS(string[] ids)
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            {
+                client.GridFS.Delete(Query<IMongoFile>.Where(f => ids.Contains(f.Id)));
+            }
+        }
+        internal static void DBRemoveGridFS(string remoteFileName)
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            {
+                client.GridFS.Delete(remoteFileName);
+            }
+        }
+        internal static void DBRemoveAllGridFS()
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            {
+                client.GridFS.Files.RemoveAll();
+                client.GridFS.Chunks.RemoveAll();
+            }
+        }
 
+        internal static void DBDownloadGridFS(string id, string localFileName)
+        {
+            using (Stream stream = File.OpenWrite(localFileName))
+            {
+                DBDownloadGridFS(id, stream);
+            }
+        }
+        internal static void DBDownloadGridFS(string id, Stream stream)
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            {
+                client.GridFS.Download(stream, Query.EQ("_id", id));
+            }
+        }
+
+    }
+
+    public static class Utilities
+    {
+        public static bool IsMongoId(this string id)
+        {
+            ObjectId oid;
+            return ObjectId.TryParse(id, out oid);
+        }
     }
 }

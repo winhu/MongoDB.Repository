@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Student.cs" />
+    <Compile Include="Entities\Entities.cs" />
     <Compile Include="EntityGridFSTest.cs" />
     <Compile Include="EntityTest.cs" />
     <Compile Include="RefEntityTest.cs" />

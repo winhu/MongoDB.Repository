@@ -13,6 +13,7 @@ namespace MongoDB.Repository.Tests
         protected List<Student> students;
         protected List<Teacher> teachers;
         protected List<Grade> grades;
+        protected List<MyFile> myfiles;
 
         [TestFixtureSetUp]
         public void Setup()
@@ -43,6 +44,7 @@ namespace MongoDB.Repository.Tests
             MongoEntity.RemoveAll<Student>();
             MongoEntity.RemoveAll<Teacher>();
             MongoEntity.RemoveAll<Grade>();
+            //MongoFile.RemoveAll();
 
             MongoDBRepository.UnregisterDBContext<TestDBContext>();
         }

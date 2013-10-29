@@ -50,14 +50,15 @@ namespace MongoDB.Repository
         {
             return _registrationTypeAndIndex.ContainsKey(entityType);
         }
-        
+
         public void EnsureDBIndex()
         {
             foreach (var key in _registrationTypeAndIndex.Keys)
             {
                 using (IDBClient client = DBFactory.GetClient(key))
                 {
-                    client.Collection.EnsureIndex(_registrationTypeAndIndex[key]);
+                    if (_registrationTypeAndIndex[key].Length > 0)
+                        client.Collection.EnsureIndex(_registrationTypeAndIndex[key]);
                 }
             }
         }

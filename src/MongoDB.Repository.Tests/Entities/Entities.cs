@@ -26,6 +26,14 @@ namespace MongoDB.Repository.Tests.Entities
         public string Name { get; set; }
     }
 
+    public class MyFile : MongoFile
+    {
+        public MyFile()
+            : base(@"c:\testxml.xml", "test.xml", "xml")
+        {
+        }
+    }
+
     public class TestDBContext : MongoDBContext
     {
         public TestDBContext() : base("TestDBContext") { }
