@@ -14,6 +14,20 @@ namespace MongoDB.Repository
 {
     internal static class EntityOperationExtensions
     {
+        internal static bool DBExists<T>(Expression<Func<T, bool>> where) where T : IEntity
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(T)))
+            {
+                return client.Collection.Count(Query<T>.Where(where)) > 0;
+            }
+        }
+        internal static bool DBExists<T>(string id) where T : IEntity
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(T)))
+            {
+                return client.Collection.Count(Query<T>.Where(t => t.Id == id)) > 0;
+            }
+        }
         internal static T DBFind<T>(string id) where T : IEntity
         {
             using (IDBClient client = DBFactory.GetClient(typeof(T)))

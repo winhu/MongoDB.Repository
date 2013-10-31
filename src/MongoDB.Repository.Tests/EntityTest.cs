@@ -23,11 +23,9 @@ namespace MongoDB.Repository.Tests
             student.Name = "hyf";
             student.Age = 30;
             //student.Save();
-
             MongoEntity.Save<Student>(students);
-
             var stud = MongoEntity.Get<Student>(student.Id);
-            MongoEntity.Get<Student>(s => s.Name == "hyf");
+            MongoEntity.Get<Student>(s => s.Name == "hyf" && s.Age > 33);
             Assert.AreEqual(student.Name, stud.Name);
             Assert.AreEqual(student.Age, stud.Age);
         }

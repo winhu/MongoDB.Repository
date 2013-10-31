@@ -21,6 +21,29 @@ namespace MongoDB.Repository
             return true;
         }
         /// <summary>
+        /// 是否存在
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public static bool Exists<T>(string id) where T : IEntity
+        {
+            IsTypeCanBeUsed(typeof(T));
+            return EntityOperationExtensions.DBExists<T>(id);
+        }
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="where">查询表达式</param>
+        /// <returns></returns>
+        public static bool Exists<T>(Expression<Func<T, bool>> where) where T : IEntity
+        {
+            IsTypeCanBeUsed(typeof(T));
+            return EntityOperationExtensions.DBExists<T>(where);
+        }
+
+        /// <summary>
         /// 获取一个实例
         /// </summary>
         /// <typeparam name="T">类型</typeparam>
