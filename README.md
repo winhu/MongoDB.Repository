@@ -1,100 +1,103 @@
 MongoDB.Repository
 ============================================================================================================
-×ÚÖ¼£º¼ò»¯MongoDBµÄ²Ù×÷·½Ê½£¬ÊµÏÖÀàËÆEntity FrameworkµÄ±àÂë·ç¸ñ¡£
+å®—æ—¨ï¼šç®€åŒ–MongoDBçš„æ“ä½œï¼Œå®ç°ç±»ä¼¼Entity Frameworké£æ ¼çš„ä»£ç 
 
 ============================================================================================================
-ÓÃÀı£º
-	//¶¨ÒåÊµÌåÀàĞÍStudent
-    public class Student : Entity
-    {
-        [BsonIndex]		//ÉèÖÃË÷Òı
-        public string Name { get; set; }
-        public int Age { get; set; }
-    }    
-	//¶¨ÒåÊµÌåÀàĞÍTeacher
-	public class Teacher : Entity
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
-    }
-	//¶¨ÒåÊµÌåÀàĞÍ£¬¼Ì³Ğ×ÔRefEntityµÄÀàĞÍ½«ÓĞ¼¯ºÏ²Ù×÷
-    public class Grade : RefEntity
-    {
-        public string Name { get; set; }
-    }
+ä½¿ç”¨æ–¹å¼ï¼š
 
-	//¶¨ÒåÉÏÏÂÎÄ£¬²¢×¢²á¶¨ÒåµÄÊµÌåÀàĞÍ
-    public class TestDBContext : MongoDBContext
-    {
-        public TestDBContext() : base("TestDBContext")		//ÉèÖÃÊı¾İ¿âÁ¬½Ó×Ö·û´®
+	//å®šä¹‰Studentç±»å‹
+	public class Student : Entity
+	{
+		[BsonIndex]		//è®¾ç½®ç´¢å¼•
+		public string Name { get; set; }
+		public int Age { get; set; }
+	}    
+	//å®šä¹‰Teacherç±»å‹
+	public class Teacher : Entity
+	{
+        	public string Name { get; set; }
+        	public int Age { get; set; }
+	}
+	//å®šä¹‰RefEntityç±»å‹ï¼Œè¯¥ç±»å‹ä¸­å«æœ‰å­é›†åŠå…¶æ“ä½œ
+	public class Grade : RefEntity
+	{
+        	public string Name { get; set; }
+	}
+
+	//å®šä¹‰ä¸Šä¸‹æ–‡
+	public class TestDBContext : MongoDBContext
+	{
+		public TestDBContext() : base("TestDBContext")		//TestDBContextä¸ºé…ç½®æ–‡ä»¶ä¸­çš„èŠ‚ç‚¹
 		{ }
 
-        public override void OnRegisterModel(ITypeRegistration registration)
-        {
-            registration.RegisterType<Student>().RegisterType<Grade>();
-        }
+		public override void OnRegisterModel(ITypeRegistration registration)
+		{
+			registration.RegisterType<Student>().RegisterType<Grade>();
+        	}
 	}
 	
-	//ÔÚÓ¦ÓÃ³ÌĞòÔËĞĞÒÁÊ¼£¬¼ÓÈëÈçÏÂÁ½¶Î´úÂë
-	MongoDBRepository.RegisterMongoDBContext(new TestDBContext());		//×¢²á¶ÔÉÏÏÂÎÄ
-    MongoDBRepository.RegisterMongoIndex();								//×¢²áË÷Òı£¬ÈçÀàĞÍÖĞÃ»ÓĞÊ¹ÓÃBsonIndexAttributeË÷Òı£¬Ôò²»ĞèÒª
+	//åœ¨ç¨‹åºè¿è¡Œä¼Šå§‹ï¼Œå†™å…¥å¦‚ä¸‹ä¸¤æ®µä»£ç è¿›è¡Œæ³¨å†Œ
+	MongoDBRepository.RegisterMongoDBContext(new TestDBContext());		//æ³¨å†Œä¸Šä¸‹æ–‡
+	MongoDBRepository.RegisterMongoIndex();					//æ³¨å†Œç´¢å¼•
 
-	//ÅäÖÃÎÄ¼şÖĞÅäÖÃÏàÓ¦µÄÁ¬½Ó×Ö·û´®½Úµã
+	//é…ç½®æ–‡ä»¶ä¸­çš„MongoDBè¿æ¥å­—ç¬¦ä¸²èŠ‚ç‚¹
 	<configuration>
 		<connectionStrings>
 			<add name="TestDBContext" connectionString="mongodb://localhost:27017/TestMongo"/>
 		</connectionStrings>
 	</configuration>
 
-=================================================================================================================
-EntityÊ¹ÓÃ£º
-1£ºµ¥Êµ±£´æ
+//=================================================================================================================
+//Entityä½¿ç”¨
+//å•å®ä½“ä¿å­˜
 Student student = new Student()
 student.Name = "hyf";
 student.Age = 30;
 student.Save();
 
-2£ºµ¥Êµ¼¯ºÏ±£´æ
+//é›†åˆä¿å­˜
 MongoEntity.Save(new List<Student>() {
     new Student{ Name="hyf", Age=33 },
     new Student{ Name="zhc", Age=30 }
 });
 
-3£ºÊµÌå²éÑ¯
+//æŸ¥è¯¢
 MongoEntity.Get<Student>(student.Id);
 MongoEntity.Get<Student>(s => s.Name == "hyf" && s.Age > 33);
 MongoEntity.Select<Student>(s => s.Age == 30).ToList();
 MongoEntity.Select<Student>(s => s.Age >= 19 && s.Age <= 22, s => s.Age, pageIndex=1, pageSize=2, out pageCount, out allCount).ToList();
 
-4£ºÉ¾³ı²Ù×÷
+//åˆ é™¤
 MongoEntity.RemoveAll<Student>(e => e.Name == "hyf");
 
-5£º¼ÆÊı
+//ç»Ÿè®¡
 MongoEntity.Count<Student>(s => s.Age == 30)
 
-6£ºÆäËü²Ù×÷£¬Çë²Î¿¼MongoEntity
+//æ›´å¤šæ“ä½œè¯·å‚è€ƒMongoEntity
 
-=================================================================================================================
-RefEntityÊ¹ÓÃ£º
-1£ºÌí¼Ó×Ó
+//=================================================================================================================
+//RefEntityä½¿ç”¨
+//ä¿å­˜
 grade = new Grade();
 grade.Name = "No1";
 foreach (Student student in students)
     grade.Add<Student>(student);
 foreach (Teacher teacher in teachers)
     grade.Add<Teacher>(teacher);
-grade.Update();		//½«grade¼°Æä×Ó¼¯ÖĞµÄStudentºÍTeacher±£´æÖÁÊı¾İ£¬±£´æ¹æÔò¾ùÎªÎŞÔòÌí¼Ó£¬ÓĞÔò¸üĞÂ¡£
+grade.Update();		//ä¿å­˜gradeå®ä¾‹åŠå…¶å­é›†ï¼Œå¦‚ä½¿ç”¨grade.save()ï¼Œåˆ™åªä¿å­˜gradeå®ä¾‹ï¼Œä¸ä¿å­˜å­é›†ã€‚
 
-2£º²éÑ¯×Ó¼¯ÖĞµÄÊı¾İ
+//æŸ¥è¯¢å­é›†
 grade.Pick<Student>("BsonId string").Name
 
-3£º×Ó¼¯Í³¼Æ
-grade.Count<Student>()	//Í³¼Æ×Ó¼¯ÖĞËùÓĞStudentÀàĞÍ
+//ç»Ÿè®¡å­é›†
+grade.Count<Student>()	//ç»Ÿè®¡å½“å‰å­é›†ä¸­çš„Studentç±»å‹
 
-4£º¹ØÓÚ×Ó¼¯µÄÆäËü²Ù×÷£¬Çë²Î¿¼IRefEntity½Ó¿Ú
+//æ›´å¤šå…³äºè‡ªå·±çš„æ“ä½œå¦‚æŸ¥è¯¢ï¼Œåˆ¤æ–­ï¼Œåˆ é™¤ç­‰è¯·å‚è€ƒIRefEntityæ¥å£
+
 =================================================================================================================
 
-Auther:WinHu
-Blog:http://www.cnblogs.com/winhu/
+Auther: WinHu
 
-»¶Ó­´ó¼ÒÊ¹ÓÃ²¢Ìá³öĞŞ¸ÄÒâ¼û¡£
+Blog: http://www.cnblogs.com/winhu/
+
+æ¬¢è¿å¤§å®¶å‚ä¸å¹¶æŒ‡æ­£ï¼Œæå‡ºæ›´å¥½çš„æ„è§ã€‚
