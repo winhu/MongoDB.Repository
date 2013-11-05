@@ -234,7 +234,7 @@ namespace MongoDB.Repository
         /// <param name="remoteFileName">存储文件名</param>
         public static void RemoveFiles(string remoteFileName)
         {
-            EntityOperationExtensions.DBRemoveGridFS(remoteFileName);
+            EntityOperationExtensions.DBRemoveGridFS(remoteFileName);  
         }
         /// <summary>
         /// 下载文件
