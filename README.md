@@ -3,7 +3,6 @@ MongoDB.Repository
 宗旨：简化MongoDB的操作方式，实现类似Entity Framework的编码风格。
 
 ============================================================================================================
-用例：
 
 	//定义实体类型Student
     public class Student : Entity
@@ -48,7 +47,6 @@ MongoDB.Repository
 	</configuration>
 
 =================================================================================================================
-Entity使用：
 
 //单实保存
 Student student = new Student()
@@ -77,9 +75,8 @@ MongoEntity.Count<Student>(s => s.Age == 30)
 //其它操作，请参考MongoEntity
 
 =================================================================================================================
-RefEntity使用：
 
-//添加子
+//添加
 grade = new Grade();
 grade.Name = "No1";
 foreach (Student student in students)
