@@ -12,7 +12,8 @@ namespace MongoDB.Repository
     {
         private MongoClient _client;
         private string _dbName;
-        Type _type;
+        private string _collectionName;
+        //Type _type;
         public DBClient(MongoUrl url, Type type)
         {
             if (url == null)
@@ -20,10 +21,24 @@ namespace MongoDB.Repository
             if (type == null)
                 throw new MongoAuthenticationException("Wrong Type");
             _dbName = url.DatabaseName;
-            this._type = type;
+            _collectionName = type.DBCollectionName();
+            //this._type = type;
             MongoClientSettings setting = MongoClientSettings.FromUrl(url);
             _client = new MongoClient(url);
         }
+        public DBClient(MongoUrl url, MongoDBRef dbRef)
+        {
+            if (url == null)
+                throw new MongoAuthenticationException("Wrong MongoUrl");
+            if (dbRef == null)
+                throw new MongoAuthenticationException("Wrong Collection Value");
+            _dbName = dbRef.DatabaseName;
+            _collectionName = dbRef.CollectionName;
+            //this._type = type;
+            MongoClientSettings setting = MongoClientSettings.FromUrl(url);
+            _client = new MongoClient(url);
+        }
+
         //public DBClient(MongoClientSettings setting, Type type)
         //{
         //    var credentials = setting.Credentials.ToArray();
@@ -49,7 +64,7 @@ namespace MongoDB.Repository
         {
             get
             {
-                return _client.GetServer().GetDatabase(DBName).GetCollection(_type.Name);
+                return _client.GetServer().GetDatabase(DBName).GetCollection(_collectionName);
             }
         }
 
@@ -76,7 +91,7 @@ namespace MongoDB.Repository
                 if (disposing)
                 {
                     _client = null;
-                    _type = null;
+                    _collectionName = null;
                     _dbName = null;
                 }
                 // Release unmanaged resources

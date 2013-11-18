@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Driver;
 
 namespace MongoDB.Repository.Tests.Entities
 {
@@ -22,6 +23,7 @@ namespace MongoDB.Repository.Tests.Entities
     public class Grade : RefEntity
     {
         public string Name { get; set; }
+        public List<MongoDBRef> Teachers { get; set; }
     }
 
     public class MyFile : MongoFile

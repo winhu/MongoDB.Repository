@@ -54,6 +54,7 @@
     <Compile Include="DBFactory.cs" />
     <Compile Include="DBRefContainer.cs" />
     <Compile Include="IMongoFile.cs" />
+    <Compile Include="MongoDBRefExtensions.cs" />
     <Compile Include="MongoEntity.cs" />
     <Compile Include="MongoFile.cs" />
     <Compile Include="RefEntity.cs" />

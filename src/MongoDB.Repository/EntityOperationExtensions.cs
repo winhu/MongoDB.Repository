@@ -14,6 +14,7 @@ namespace MongoDB.Repository
 {
     internal static class EntityOperationExtensions
     {
+
         internal static bool DBExists<T>(Expression<Func<T, bool>> where) where T : IEntity
         {
             using (IDBClient client = DBFactory.GetClient(typeof(T)))
@@ -242,6 +243,10 @@ namespace MongoDB.Repository
         {
             ObjectId oid;
             return ObjectId.TryParse(id, out oid);
+        }
+        internal static string DBCollectionName(this Type type)
+        {
+            return type.Name;
         }
     }
 }

@@ -52,5 +52,22 @@ namespace MongoDB.Repository.Tests
 
             Assert.AreEqual(student2.Age, g.Pick<Student>(student2.Id).Age);
         }
+
+        [TestCase]
+        public void Test()
+        {
+            Grade grade = new Grade() { Name = "Grade1", Teachers = new List<Driver.MongoDBRef>() };
+            foreach (var teacher in teachers)
+            {
+                teacher.Save();
+                grade.Teachers.Add(teacher.ToDBRef());
+            }
+            grade.Save();
+            var teach = grade.Teachers.RefPick<Teacher>(teachers[0].Id);
+            var ts = grade.Teachers.RefPick<Teacher>(t => t.Age >= 50);
+            Assert.AreEqual(2, ts.Count);
+            Assert.AreEqual(teach.Id, teachers[0].Id);
+            Assert.AreEqual(teach.Name, teachers[0].Name);
+        }
     }
 }
