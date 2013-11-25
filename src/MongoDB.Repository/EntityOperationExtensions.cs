@@ -29,6 +29,13 @@ namespace MongoDB.Repository
                 return client.Collection.Count(Query<T>.Where(t => t.Id == id)) > 0;
             }
         }
+        internal static List<T> DBFindAll<T>() where T : IEntity
+        {
+            using (IDBClient client = DBFactory.GetClient(typeof(T)))
+            {
+                return client.Collection.FindAllAs<T>().ToList();
+            }
+        }
         internal static T DBFind<T>(string id) where T : IEntity
         {
             using (IDBClient client = DBFactory.GetClient(typeof(T)))

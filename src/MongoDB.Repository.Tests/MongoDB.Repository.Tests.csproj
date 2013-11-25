@@ -53,7 +53,6 @@
     <Compile Include="Entities\Entities.cs" />
     <Compile Include="EntityGridFSTest.cs" />
     <Compile Include="EntityTest.cs" />
-    <Compile Include="RefEntityTest.cs" />
     <Compile Include="TestBase\TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

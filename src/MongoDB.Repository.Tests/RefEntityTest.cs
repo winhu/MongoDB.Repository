@@ -56,7 +56,7 @@ namespace MongoDB.Repository.Tests
         [TestCase]
         public void Test()
         {
-            Grade grade = new Grade() { Name = "Grade1", Teachers = new List<Driver.MongoDBRef>() };
+            Grade grade = new Grade() { Name = "Grade1"};
             foreach (var teacher in teachers)
             {
                 teacher.Save();

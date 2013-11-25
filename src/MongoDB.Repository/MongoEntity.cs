@@ -42,6 +42,11 @@ namespace MongoDB.Repository
             IsTypeCanBeUsed(typeof(T));
             return EntityOperationExtensions.DBExists<T>(where);
         }
+        public static List<T> GetAll<T>() where T : IEntity
+        {
+            IsTypeCanBeUsed(typeof(T));
+            return EntityOperationExtensions.DBFindAll<T>();
+        }
 
         /// <summary>
         /// 获取一个实例
@@ -234,7 +239,7 @@ namespace MongoDB.Repository
         /// <param name="remoteFileName">存储文件名</param>
         public static void RemoveFiles(string remoteFileName)
         {
-            EntityOperationExtensions.DBRemoveGridFS(remoteFileName);  
+            EntityOperationExtensions.DBRemoveGridFS(remoteFileName);
         }
         /// <summary>
         /// 下载文件

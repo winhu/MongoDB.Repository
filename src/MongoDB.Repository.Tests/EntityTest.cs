@@ -22,7 +22,7 @@ namespace MongoDB.Repository.Tests
             Student student = new Student();
             student.Name = "hyf";
             student.Age = 30;
-            //student.Save();
+            student.Save();
             MongoEntity.Save<Student>(students);
             var stud = MongoEntity.Get<Student>(student.Id);
             MongoEntity.Get<Student>(s => s.Name == "hyf" && s.Age > 33);
@@ -41,10 +41,11 @@ namespace MongoDB.Repository.Tests
         public void TestSelectPaged()
         {
             int pageCount, allCount;
-            var querable = MongoEntity.Select<Student>(s => s.Age >= 19 && s.Age <= 22, s => s.Age, 1, 2, out pageCount, out allCount).ToList();
+            //MongoEntity.Save<Student>(students);
+            var querable = MongoEntity.Select<Student>(s => s.Age >= 19 && s.Age <= 40, s => s.Age, 0, 2, out pageCount, out allCount).ToList();
             Assert.AreEqual(2, querable.Count);
             Assert.AreEqual(2, pageCount);
-            Assert.AreEqual(4, allCount);
+            Assert.AreEqual(3, allCount);
             MongoEntity.Save(new List<Student>() {
                 new Student{ Name="hyf", Age=33 },
                 new Student{ Name="zhc", Age=30 }

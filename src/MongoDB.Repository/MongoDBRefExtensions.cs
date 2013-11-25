@@ -23,6 +23,12 @@ namespace MongoDB.Repository
             var ids = lst.Where(i => i.CollectionName == typeof(T).DBCollectionName()).Select(i => i.Id).ToArray();
             return EntityOperationExtensions.DBSelect<T>(i => ids.Contains(i.Id)).Where(where).ToList();
         }
+        public static List<T> RefPick<T>(this List<MongoDBRef> lst) where T : IEntity
+        {
+            if (lst == null) return new List<T>();
+            var ids = lst.Where(i => i.CollectionName == typeof(T).DBCollectionName()).Select(i => i.Id).ToArray();
+            return EntityOperationExtensions.DBSelect<T>(i => ids.Contains(i.Id)).ToList();
+        }
         public static bool RefExists<T>(this List<MongoDBRef> lst, string id) where T : IEntity
         {
             if (lst == null) return false;

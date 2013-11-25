@@ -20,8 +20,9 @@ namespace MongoDB.Repository.Tests.Entities
         public int Age { get; set; }
     }
 
-    public class Grade : RefEntity
+    public class Grade : Entity
     {
+        public Grade() { Teachers = new List<MongoDBRef>(); }
         public string Name { get; set; }
         public List<MongoDBRef> Teachers { get; set; }
     }
