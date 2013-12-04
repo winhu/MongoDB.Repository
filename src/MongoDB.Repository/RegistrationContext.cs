@@ -75,5 +75,11 @@ namespace MongoDB.Repository
             if (!_typeResolver.IsRegisterType(type)) return;
             _typeResolver.EnsureDBIndex(type);
         }
+
+
+        public List<Type> GetAllTypes()
+        {
+            return _typeResolver.GetAllTypes();
+        }
     }
 }

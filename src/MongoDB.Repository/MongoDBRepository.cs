@@ -30,6 +30,14 @@ namespace MongoDB.Repository
 
             IRegistrationContext context = new RegistrationContext();
             context.RegisterDBContext(dbContext);
+            context.GetAllTypes().ForEach(delegate(Type t)
+            {
+                Contexts.ForEach(delegate(IRegistrationContext con)
+                {
+                    if (con.GetAllTypes().Exists(_t => _t.FullName == t.FullName))
+                        throw new Exception(string.Format("Conflicted type {0} between {1} and {2}", t.FullName, con.Code, context.Code));
+                });
+            });
             Contexts.Add(context);
         }
 

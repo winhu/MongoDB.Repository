@@ -70,5 +70,11 @@ namespace MongoDB.Repository
                 client.Collection.EnsureIndex(_registrationTypeAndIndex[type]);
             }
         }
+
+
+        public List<Type> GetAllTypes()
+        {
+            return _registrationTypeAndIndex.Keys.ToList();
+        }
     }
 }

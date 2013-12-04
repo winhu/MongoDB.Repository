@@ -58,7 +58,7 @@ namespace MongoDB.Repository
         /// get all registered collection types
         /// </summary>
         /// <returns></returns>
-        //List<Type> GetRegisterTypes();
+        List<Type> GetAllTypes();
 
         /// <summary>
         /// ensure index to mongodb

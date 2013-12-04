@@ -50,9 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBContext\MongoDBContextTest.cs" />
     <Compile Include="Entities\Entities.cs" />
     <Compile Include="EntityGridFSTest.cs" />
     <Compile Include="EntityTest.cs" />
+    <Compile Include="TestBase\DBContextTestBase.cs" />
     <Compile Include="TestBase\TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

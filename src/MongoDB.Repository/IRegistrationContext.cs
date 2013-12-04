@@ -49,6 +49,12 @@ namespace MongoDB.Repository
         void RegisterType(Type type);
 
         /// <summary>
+        /// get all registered types
+        /// </summary>
+        /// <returns></returns>
+        List<Type> GetAllTypes();
+
+        /// <summary>
         /// return MongoUrl
         /// </summary>
         /// <returns></returns>
