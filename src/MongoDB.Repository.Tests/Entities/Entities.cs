@@ -30,7 +30,7 @@ namespace MongoDB.Repository.Tests.Entities
     public class MyFile : MongoFile
     {
         public MyFile()
-            : base(@"c:\testxml.xml", "test.xml", "xml")
+            : base(typeof(MyFile), @"c:\testxml.xml", "test.xml", "xml")
         {
         }
     }
@@ -41,7 +41,7 @@ namespace MongoDB.Repository.Tests.Entities
 
         public override void OnRegisterModel(ITypeRegistration registration)
         {
-            registration.RegisterType<Student>().RegisterType<Teacher>().RegisterType<Grade>();
+            registration.RegisterType<Student>().RegisterType<Teacher>().RegisterType<Grade>().RegisterType<MyFile>();
         }
     }
 }

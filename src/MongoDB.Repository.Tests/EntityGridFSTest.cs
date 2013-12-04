@@ -16,15 +16,18 @@ namespace MongoDB.Repository.Tests
         [TestCase]
         public void CreateFileTestCase()
         {
-            IMongoFile file = MongoEntity.CreateFile(@"c:\pic1.jpg", "pic1.jpg", "jpg");
-            file.Download(@"c:\a.jpg");
+            IMongoFile file = MongoEntity.CreateFile<MyFile>(@"c:\pic1.jpg", "pic2.jpg", "jpg");
+            file.Download(@"c:\beforesave.jpg");
             file.Save();
-            IMongoFile fs = MongoEntity.LoadFile(file.Id);
-            var files = MongoEntity.LoadAllFiles("test.xml");
+            IMongoFile fs = MongoEntity.LoadFile<MyFile>(file.Id);
+            fs.Download(@"c:\aftersave.jpg");
+            var files = MongoEntity.LoadAllFiles<MyFile>("pic2.jpg");
 
-            MongoEntity.DownloadFile(file.Id, @"c:\copy.jpg");
+            MongoEntity.DownloadFile<MyFile>(file.Id, @"c:\copy.jpg");
 
             Assert.AreEqual(file.Id, fs.Id);
+            Assert.AreEqual(1, files.Count);
+            Assert.AreEqual(file.Id, files[0].Id);
             Assert.IsNull(file.MD5);
             Assert.IsNotNull(fs.MD5);
             Assert.AreEqual(file.Size, fs.Size);

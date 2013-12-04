@@ -62,7 +62,6 @@ namespace MongoDB.Repository
             _dbContextType = context.GetType();
             this._configuration = context.BuildConfiguration();
             context.OnRegisterModel(_typeResolver);
-            _typeResolver.RegisterType<IMongoFile>();
         }
 
         public void EnsureDBIndex()

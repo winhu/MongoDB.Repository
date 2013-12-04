@@ -11,6 +11,8 @@ namespace MongoDB.Repository
 {
     public interface IMongoFile : IEntity
     {
+        Type RealType { get; }
+
         /// <summary>
         /// remote file name
         /// </summary>

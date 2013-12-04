@@ -154,9 +154,11 @@ namespace MongoDB.Repository
         }
 
 
-        internal static MongoGridFSFileInfo DBSaveGridFS(IMongoFile file)
+        internal static MongoGridFSFileInfo DBSaveGridFS<TFileType>(Type type, IMongoFile file) where TFileType : IMongoFile
+        { return DBSaveGridFS(typeof(TFileType), file); }
+        internal static MongoGridFSFileInfo DBSaveGridFS(Type type, IMongoFile file)
         {
-            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            using (IDBClient client = DBFactory.GetClient(type))
             {
                 using (Stream stream = File.OpenRead(file.LocalFileName))
                 {
@@ -183,60 +185,88 @@ namespace MongoDB.Repository
             options.UploadDate = file.UploadDate;
             return options;
         }
-        internal static MongoGridFSFileInfo DBLoadGridFS(BsonValue id)
+        internal static MongoGridFSFileInfo DBLoadGridFS<TFileType>(BsonValue id) where TFileType : IMongoFile
         {
-            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            return DBLoadGridFS(typeof(TFileType), id);
+        }
+        internal static MongoGridFSFileInfo DBLoadGridFS(Type type, BsonValue id)
+        {
+            using (IDBClient client = DBFactory.GetClient(type))
             {
                 return client.GridFS.FindOneById(id);
             }
         }
-        internal static List<MongoGridFSFileInfo> DBLoadGridFS(string remoteFileName)
+        internal static List<MongoGridFSFileInfo> DBLoadGridFS<TFileType>(string remoteFileName) where TFileType : IMongoFile
+        { return DBLoadGridFS(typeof(TFileType), remoteFileName); }
+        internal static List<MongoGridFSFileInfo> DBLoadGridFS(Type type, string remoteFileName)
         {
-            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            using (IDBClient client = DBFactory.GetClient(type))
             {
                 return client.GridFS.Find(remoteFileName).ToList<MongoGridFSFileInfo>();
             }
         }
-        internal static void DBRemoveGridFS(BsonValue id)
+        internal static void DBRemoveGridFS<TFileType>(BsonValue id) where TFileType : IMongoFile
         {
-            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            DBRemoveGridFS(typeof(TFileType), id);
+        }
+        internal static void DBRemoveGridFS(Type type, BsonValue id)
+        {
+            using (IDBClient client = DBFactory.GetClient(type))
             {
                 client.GridFS.DeleteById(id);
             }
         }
-        internal static void DBRemoveGridFS(string[] ids)
+        internal static void DBRemoveGridFS<TFileType>(Type type, string[] ids) where TFileType : IMongoFile
         {
-            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            DBRemoveGridFS(typeof(TFileType), ids);
+        }
+        internal static void DBRemoveGridFS(Type type, string[] ids)
+        {
+            using (IDBClient client = DBFactory.GetClient(type))
             {
                 client.GridFS.Delete(Query<IMongoFile>.Where(f => ids.Contains(f.Id)));
             }
         }
-        internal static void DBRemoveGridFS(string remoteFileName)
+        internal static void DBRemoveGridFS<TFileType>(string remoteFileName) where TFileType : IMongoFile
+        { DBRemoveGridFS(typeof(TFileType), remoteFileName); }
+        internal static void DBRemoveGridFS(Type type, string remoteFileName)
         {
-            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            using (IDBClient client = DBFactory.GetClient(type))
             {
                 client.GridFS.Delete(remoteFileName);
             }
         }
-        internal static void DBRemoveAllGridFS()
+
+        internal static void DBRemoveAllGridFS<TFileType>() where TFileType : IMongoFile
         {
-            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            DBRemoveAllGridFS(typeof(TFileType));
+        }
+        internal static void DBRemoveAllGridFS(Type type)
+        {
+            using (IDBClient client = DBFactory.GetClient(type))
             {
                 client.GridFS.Files.RemoveAll();
                 client.GridFS.Chunks.RemoveAll();
             }
         }
-
-        internal static void DBDownloadGridFS(string id, string localFileName)
+        internal static void DBDownloadGridFS<TFileType>(string id, string localFileName) where TFileType : IMongoFile
+        {
+            DBDownloadGridFS(typeof(TFileType), id, localFileName);
+        }
+        internal static void DBDownloadGridFS(Type type, string id, string localFileName)
         {
             using (Stream stream = File.OpenWrite(localFileName))
             {
-                DBDownloadGridFS(id, stream);
+                DBDownloadGridFS(type, id, stream);
             }
         }
-        internal static void DBDownloadGridFS(string id, Stream stream)
+        internal static void DBDownloadGridFS<TFileType>(string id, Stream stream) where TFileType : IMongoFile
         {
-            using (IDBClient client = DBFactory.GetClient(typeof(IMongoFile)))
+            DBDownloadGridFS(typeof(TFileType), id, stream);
+        }
+        internal static void DBDownloadGridFS(Type type, string id, Stream stream)
+        {
+            using (IDBClient client = DBFactory.GetClient(type))
             {
                 client.GridFS.Download(stream, Query.EQ("_id", id));
             }

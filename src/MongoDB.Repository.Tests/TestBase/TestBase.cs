@@ -44,7 +44,7 @@ namespace MongoDB.Repository.Tests
             MongoEntity.RemoveAll<Student>();
             MongoEntity.RemoveAll<Teacher>();
             MongoEntity.RemoveAll<Grade>();
-            //MongoFile.RemoveAll();
+            MongoEntity.RemoveAllFiles<MyFile>();
 
             MongoDBRepository.UnregisterDBContext<TestDBContext>();
         }

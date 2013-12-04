@@ -176,9 +176,9 @@ namespace MongoDB.Repository
         /// <param name="remoteFileName">存储文件名</param>
         /// <param name="contentType">文件类型</param>
         /// <returns></returns>
-        public static IMongoFile CreateFile(string localFileName, string remoteFileName, string contentType = "application/octet-stream")
+        public static IMongoFile CreateFile<TMongoFileType>(string localFileName, string remoteFileName, string contentType = "application/octet-stream") where TMongoFileType : IMongoFile
         {
-            return new MongoFile(localFileName, remoteFileName, contentType);
+            return new MongoFile<TMongoFileType>(localFileName, remoteFileName, contentType);
         }
         /// <summary>
         /// 创建一个GridFS文件
@@ -187,77 +187,77 @@ namespace MongoDB.Repository
         /// <param name="remoteFileName">存储文件名</param>
         /// <param name="contentType">文件类型</param>
         /// <returns></returns>
-        public static IMongoFile CreateFile(Stream fileStream, string remoteFileName, string contentType = "application/octet-stream")
+        public static IMongoFile CreateFile<TMongoFileType>(Stream fileStream, string remoteFileName, string contentType = "application/octet-stream") where TMongoFileType : IMongoFile
         {
-            return new MongoFile(fileStream, remoteFileName, contentType);
+            return new MongoFile<TMongoFileType>(fileStream, remoteFileName, contentType);
         }
         /// <summary>
         /// 加载一个GridFS文件
         /// </summary>
         /// <param name="id">文件id</param>
         /// <returns></returns>
-        public static IMongoFile LoadFile(string id)
+        public static IMongoFile LoadFile<TMongoFileType>(string id) where TMongoFileType : IMongoFile
         {
             if (!id.IsMongoId()) return null;
-            return new MongoFile(EntityOperationExtensions.DBLoadGridFS((BsonValue)id));
+            return new MongoFile<TMongoFileType>(EntityOperationExtensions.DBLoadGridFS<TMongoFileType>((BsonValue)id));
         }
         /// <summary>
         /// 加载文件集
         /// </summary>
         /// <param name="remoteFileName">存储文件名</param>
         /// <returns></returns>
-        public static List<IMongoFile> LoadAllFiles(string remoteFileName)
+        public static List<IMongoFile> LoadAllFiles<TMongoFileType>(string remoteFileName) where TMongoFileType : IMongoFile
         {
             List<IMongoFile> files = new List<IMongoFile>();
             if (string.IsNullOrEmpty(remoteFileName)) return files;
-            var infos = EntityOperationExtensions.DBLoadGridFS(remoteFileName);
+            var infos = EntityOperationExtensions.DBLoadGridFS<TMongoFileType>(remoteFileName);
             if (infos.Count == 0) return files;
             infos.ForEach(delegate(MongoGridFSFileInfo info)
             {
-                files.Add(new MongoFile(info));
+                files.Add(new MongoFile<TMongoFileType>(info));
             });
             return files;
         }
         /// <summary>
         /// 移除所有文件（慎用）
         /// </summary>
-        public static void RemoveAllFiles()
+        public static void RemoveAllFiles<TMongoFileType>() where TMongoFileType : IMongoFile
         {
-            EntityOperationExtensions.DBRemoveAllGridFS();
+            EntityOperationExtensions.DBRemoveAllGridFS<TMongoFileType>();
         }
         /// <summary>
         /// 移除文件
         /// </summary>
         /// <param name="id">文件id</param>
-        public static void RemoveFile(string id)
+        public static void RemoveFile<TMongoFileType>(string id) where TMongoFileType : IMongoFile
         {
-            EntityOperationExtensions.DBRemoveGridFS((BsonValue)id);
+            EntityOperationExtensions.DBRemoveGridFS<TMongoFileType>((BsonValue)id);
         }
         /// <summary>
         /// 移除文件
         /// </summary>
         /// <param name="remoteFileName">存储文件名</param>
-        public static void RemoveFiles(string remoteFileName)
+        public static void RemoveFiles<TMongoFileType>(string remoteFileName) where TMongoFileType : IMongoFile
         {
-            EntityOperationExtensions.DBRemoveGridFS(remoteFileName);
+            EntityOperationExtensions.DBRemoveGridFS<TMongoFileType>(remoteFileName);
         }
         /// <summary>
         /// 下载文件
         /// </summary>
         /// <param name="id">文件id</param>
         /// <param name="localFileName">本地路径（绝对路径）</param>
-        public static void DownloadFile(string id, string localFileName)
+        public static void DownloadFile<TMongoFileType>(string id, string localFileName) where TMongoFileType : IMongoFile
         {
-            EntityOperationExtensions.DBDownloadGridFS(id, localFileName);
+            EntityOperationExtensions.DBDownloadGridFS<TMongoFileType>(id, localFileName);
         }
         /// <summary>
         /// 下载文件
         /// </summary>
         /// <param name="id">文件id</param>
         /// <param name="stream">文件流</param>
-        public static void DownloadFile(string id, Stream stream)
+        public static void DownloadFile<TMongoFileType>(string id, Stream stream) where TMongoFileType : IMongoFile
         {
-            EntityOperationExtensions.DBDownloadGridFS(id, stream);
+            EntityOperationExtensions.DBDownloadGridFS<TMongoFileType>(id, stream);
         }
     }
 }
