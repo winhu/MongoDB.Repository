@@ -30,7 +30,7 @@ namespace MongoDB.Repository.Tests.Entities
     public class MyFile : MongoFile
     {
         public MyFile()
-            : base(typeof(MyFile), @"c:\testxml.xml", "test.xml", "xml")
+            : base(@"c:\testxml.xml", "test.xml", "xml")
         {
         }
     }
