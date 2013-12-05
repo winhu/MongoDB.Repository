@@ -31,8 +31,7 @@ namespace MongoDB.Repository.Tests.Entities
     {
         public MyFile()
             : base(@"c:\testxml.xml", "test.xml", "xml")
-        {
-        }
+        { }
     }
 
     public class TestDBContext : MongoDBContext

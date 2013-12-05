@@ -30,7 +30,7 @@ namespace MongoDB.Repository
             this._type = typeof(T);
         }
     }
-    public class MongoFile : Entity, IMongoFile
+    public abstract class MongoFile : Entity, IMongoFile
     {
 
         /// <summary>
