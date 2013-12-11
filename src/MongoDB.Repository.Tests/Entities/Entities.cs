@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace MongoDB.Repository.Tests.Entities
@@ -27,6 +28,27 @@ namespace MongoDB.Repository.Tests.Entities
         public List<MongoDBRef> Teachers { get; set; }
     }
 
+    public class Department : MongoDBRef
+    {
+        public Department()
+            : base("Department", ObjectId.GenerateNewId())
+        {
+        }
+        public string Name { get; set; }
+    }
+
+    public class School : Entity
+    {
+        public School()
+        {
+            Students = new List<Student>();
+            Departments = new List<Department>();
+        }
+        public string Name { get; set; }
+        public List<Student> Students { get; set; }
+        public List<Department> Departments { get; set; }
+    }
+
     public class MyFile : MongoFile
     {
         public MyFile()
@@ -41,6 +63,7 @@ namespace MongoDB.Repository.Tests.Entities
         public override void OnRegisterModel(ITypeRegistration registration)
         {
             registration.RegisterType<Student>().RegisterType<Teacher>().RegisterType<Grade>().RegisterType<MyFile>();
+            registration.RegisterType<School>();
         }
     }
 }

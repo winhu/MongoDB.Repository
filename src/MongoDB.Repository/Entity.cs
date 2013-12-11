@@ -48,5 +48,16 @@ namespace MongoDB.Repository
         {
             return new MongoDBRef(this.GetType().Name, this.Id);
         }
+
+
+        public ObjectId BsonObjectId
+        {
+            get
+            {
+                if (_id == ObjectId.Empty)
+                    _id = ObjectId.GenerateNewId(DateTime.Now);
+                return _id;
+            }
+        }
     }
 }

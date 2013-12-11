@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace MongoDB.Repository
@@ -26,5 +27,10 @@ namespace MongoDB.Repository
         /// </summary>
         /// <returns></returns>
         MongoDBRef ToDBRef();
+        /// <summary>
+        /// objectid
+        /// </summary>
+        /// <returns></returns>
+        ObjectId BsonObjectId { get; }
     }
 }

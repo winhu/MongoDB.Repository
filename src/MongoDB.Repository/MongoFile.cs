@@ -30,8 +30,32 @@ namespace MongoDB.Repository
             this._type = typeof(T);
         }
     }
+
+    //public class MFile : Entity
+    //{
+    //    public string RemoteFileName { get; set; }
+    //    public string ContentType { get; set; }
+
+    //    public TFileEntity GetInstance<TFileEntity>() where TFileEntity : IMongoFile
+    //    {
+    //        return null;
+    //    }
+    //}
+
     public abstract class MongoFile : Entity, IMongoFile
     {
+        /// <summary>
+        ///  默认构造函数，
+        ///  RealEntityType为当前类型，
+        ///  RemoteFileName为当前类型名，
+        ///  ContentType为jpg
+        /// </summary>
+        public MongoFile()
+        {
+            this._type = this.GetType();
+            this.RemoteFileName = this.GetType().Name;
+            this._contentType = "jpg";
+        }
 
         /// <summary>
         /// 构造函数（并加载文件）

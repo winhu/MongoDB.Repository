@@ -60,5 +60,28 @@ namespace MongoDB.Repository.Tests
             Assert.Greater(count, ret);
         }
 
+        [TestCase]
+        public void TestEntityList()
+        {
+            School school = new School() { Name = "WinStudio" };
+
+            List<Department> depts = new List<Department>(){
+                new Department(){ Name="Master"},
+                new Department(){ Name="Admin"}
+            };
+            foreach (Department dept in depts)
+            {
+                school.Departments.Add(dept);
+            }
+
+            foreach (Student student in students)
+            {
+                school.Students.Add(student);
+            }
+            school.Save();
+
+            School sch = MongoEntity.Get<School>(school.Id);
+            Console.WriteLine(sch.Name);
+        }
     }
 }
