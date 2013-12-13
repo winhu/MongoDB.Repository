@@ -10,6 +10,12 @@ namespace MongoDB.Repository
 {
     public static class MongoDBRefExtensions
     {
+        public static T Instance<T>(this MongoDBRef instance) where T : IEntity
+        {
+            if (instance == null || null == instance.Id || string.IsNullOrEmpty(instance.CollectionName)) return default(T);
+            return EntityOperationExtensions.DBFind<T>(instance.Id.ToString());
+        }
+
         public static T RefPick<T>(this List<MongoDBRef> lst, string id) where T : IEntity
         {
             if (lst == null) return default(T);
