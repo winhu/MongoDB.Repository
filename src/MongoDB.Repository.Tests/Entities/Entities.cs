@@ -8,6 +8,13 @@ using MongoDB.Driver;
 
 namespace MongoDB.Repository.Tests.Entities
 {
+    public class TypeTest : Entity
+    {
+        public string Name { get; set; }
+
+        public byte[] Bytes { get; set; }
+    }
+
     public class Student : Entity
     {
         [BsonIndex]
@@ -64,6 +71,7 @@ namespace MongoDB.Repository.Tests.Entities
         {
             registration.RegisterType<Student>().RegisterType<Teacher>().RegisterType<Grade>().RegisterType<MyFile>();
             registration.RegisterType<School>();
+            registration.RegisterType<TypeTest>();
         }
     }
 }

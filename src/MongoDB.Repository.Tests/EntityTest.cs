@@ -83,5 +83,22 @@ namespace MongoDB.Repository.Tests
             School sch = MongoEntity.Get<School>(school.Id);
             Console.WriteLine(sch.Name);
         }
+
+        [TestCase]
+        public void TestTypeTest()
+        {
+            TypeTest tt = new TypeTest();
+            tt.Name = "TypeTester";
+            tt.Bytes = Encoding.UTF8.GetBytes(tt.Name);
+            tt.Save();
+
+            var dbtt = MongoEntity.Get<TypeTest>(tt.Id);
+
+            string b64 = Convert.ToBase64String(tt.Bytes);
+
+            Assert.AreEqual(tt.Name, dbtt.Name);
+            Assert.AreEqual(tt.Bytes.Length, dbtt.Bytes.Length);
+            Assert.AreEqual(tt.Bytes, dbtt.Bytes);
+        }
     }
 }

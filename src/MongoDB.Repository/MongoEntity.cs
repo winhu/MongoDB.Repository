@@ -160,6 +160,15 @@ namespace MongoDB.Repository
             entities.DBSave<T>();
         }
         /// <summary>
+        /// 保存
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="entity">实体</param>
+        public static void Save<T>(T entity) where T : IEntity
+        {
+            EntityOperationExtensions.DBSave(typeof(T), entity);
+        }
+        /// <summary>
         /// 批量插入（已存在则不插入）
         /// </summary>
         /// <typeparam name="T">类型</typeparam>

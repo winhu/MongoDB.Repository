@@ -29,13 +29,15 @@ namespace MongoDB.Repository.Tests
                 new Teacher{ Name="Lee", Age=53 },
                 new Teacher{ Name="Chen", Age=50 }
             };
+            Grade grade = new Grade();
+            teachers.ForEach(t => grade.Teachers.Add(t.ToDBRef()));
             grades = new List<Grade>() {
-                new Grade()
+                grade
             };
 
-            //MongoEntity.Save(students);
-            //MongoEntity.Save(teachers);
-            //MongoEntity.Save(grades);
+            MongoEntity.Save(students);
+            MongoEntity.Save(teachers);
+            MongoEntity.Save(grades);
         }
 
         [TestFixtureTearDown]
