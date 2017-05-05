@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 
 namespace MongoDB.Repository
 {
@@ -17,9 +18,9 @@ namespace MongoDB.Repository
         public DBClient(MongoUrl url, Type type)
         {
             if (url == null)
-                throw new MongoAuthenticationException("Wrong MongoUrl");
+                throw new MongoAuthenticationException(null, "Wrong MongoUrl");
             if (type == null)
-                throw new MongoAuthenticationException("Wrong Type");
+                throw new MongoAuthenticationException(null, "Wrong Type");
             _dbName = url.DatabaseName;
             _collectionName = type.DBCollectionName();
             //this._type = type;
@@ -29,9 +30,9 @@ namespace MongoDB.Repository
         public DBClient(MongoUrl url, MongoDBRef dbRef)
         {
             if (url == null)
-                throw new MongoAuthenticationException("Wrong MongoUrl");
+                throw new MongoAuthenticationException(null, "Wrong MongoUrl");
             if (dbRef == null)
-                throw new MongoAuthenticationException("Wrong Collection Value");
+                throw new MongoAuthenticationException(null, "Wrong Collection Value");
             _dbName = dbRef.DatabaseName;
             _collectionName = dbRef.CollectionName;
             //this._type = type;
@@ -72,6 +73,8 @@ namespace MongoDB.Repository
         {
             get { return _client.GetServer().GetDatabase(DBName).GridFS; }
         }
+
+        MongoGridFS IDBClient.GridFS => throw new NotImplementedException();
 
         #region 资源回收
         public void Dispose()
