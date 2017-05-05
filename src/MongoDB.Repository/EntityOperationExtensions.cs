@@ -61,7 +61,7 @@ namespace MongoDB.Repository
         {
             using (IDBClient client = DBFactory.GetClient(typeof(T)))
             {
-                return client.Collection.Remove(Query<T>.Where(e => e.Id == id)).Ok;
+                return !client.Collection.Remove(Query<T>.Where(e => e.Id == id)).HasLastErrorMessage;
             }
         }
         internal static long DBRemoveAll<T>() where T : IEntity
@@ -138,9 +138,9 @@ namespace MongoDB.Repository
                 {
                     var ret = client.Collection.InsertBatch<T>(entities, new Driver.MongoInsertOptions() { Flags = Driver.InsertFlags.ContinueOnError });
                 }
-                catch (WriteConcernException e)
+                catch (MongoWriteConcernException e)
                 {
-                    if (!e.CommandResult.Ok)
+                    if (e.WriteConcernResult.DocumentsAffected!=1)
                         throw e;
                 }
             }
@@ -149,7 +149,7 @@ namespace MongoDB.Repository
         {
             using (IDBClient client = DBFactory.GetClient(entity.GetType()))
             {
-                return client.Collection.Remove(Query<T>.EQ(e => e.Id, entity.Id)).Ok;
+                return client.Collection.Remove(Query<T>.EQ(e => e.Id, entity.Id)).DocumentsAffected==1;
             }
         }
 

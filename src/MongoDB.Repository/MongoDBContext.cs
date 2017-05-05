@@ -25,7 +25,7 @@ namespace MongoDB.Repository
             if (configuration != null) return configuration;
 
             var setting = ConfigurationManager.ConnectionStrings[_connectionStringName];
-            if (setting == null) throw new MongoConnectionException("Wrong ConnectionString Name");
+            if (setting == null) throw new MongoConnectionException(null, "Wrong ConnectionString Name");
             var url = new MongoUrl(setting.ConnectionString);
             configuration = new ConfigurationRegistration();
             configuration.Add(this.GetType(), url);

@@ -37,7 +37,7 @@ namespace MongoDB.Repository
     //    public string ContentType { get; set; }
 
     //    public TFileEntity GetInstance<TFileEntity>() where TFileEntity : IMongoFile
-    //    {
+    //    { 
     //        return null;
     //    }
     //}
@@ -101,7 +101,7 @@ namespace MongoDB.Repository
         public MongoFile(MongoGridFSFileInfo file)
         {
             _type = this.GetType();
-            if (file == null) throw new MongoGridFSException(this.ToString());
+            if (file == null) throw new MongoGridFSException(null,this.ToString());
             if (!file.Exists) return;
             Id = file.Id.ToString();
 

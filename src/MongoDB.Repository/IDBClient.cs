@@ -16,7 +16,7 @@ namespace MongoDB.Repository
         string DBName { get; }
 
         /// <summary>
-        /// return MongoCollection
+        /// return MongoCollectio
         /// </summary>
         MongoCollection Collection { get; }
 
